@@ -448,4 +448,4 @@ def upload():
 
 
 if __name__ == "__main__":
-    socketio.run(app, port=8090, host='127.0.0.1', debug=True)
+    socketio.run(app, debug=True)
