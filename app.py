@@ -14,7 +14,7 @@ from faker import Factory
 app = Flask(__name__)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:pass@localhost/lobhub'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://j7jr2qorxul8chhw:hkwhs8yrwnwleb53@qao3ibsa7hhgecbv.cbetxkdyhwsb.us-east-1.rds.amazonaws.com/ky6zchcnuadiu2hk'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
