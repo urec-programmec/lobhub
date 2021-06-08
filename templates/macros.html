@@ -1,0 +1,139 @@
+{% macro footer(session, title, color) %}
+    <div class="contain">
+        <div class="icon contain" style="background: {{session['color']}}; color: {{session['textColor']}}">
+            <div class="i">{{session['name']}}</div>
+        </div>
+        <div class="xicon contain xfone" id="profile-open">
+            <div class="h4">profile</div>
+        </div>
+        {% if color %}
+            <h1 class="text-light contain {% if type == 1 %} {{ 'btn btn-success' }} {% elif type == 2 %} {{ 'btn btn-warning' }} {% else %} {{ 'btn btn-danger' }} {% endif %}">{{title}}</h1>
+        {% else %}
+            <h1 class="text-light contain">{{title}}</h1>
+        {% endif %}
+        <hr>
+    </div>
+{% endmacro %}
+
+
+{% macro profile(session, L, U, UL) %}
+<div class="profile" style="background: rgba({{session['r']}}, {{session['g']}}, {{session['b']}}, 0.5); color: {{ session['textColor'] }} !important;" id="profile">
+
+    {% if session.get('key') %}
+        <div class="menu text-light h6 {% if L.query.filter_by(keycode=session['key']).first().type == 1 %} {{ 'btn btn-success' }} {% elif L.query.filter_by(keycode=session['key']).first().type == 2 %} {{ 'btn btn-warning' }} {% else %} {{ 'btn btn-danger' }} {% endif %}">[ {{session['key']}} ]</div>
+        <div class="menu text-light h3"><u>resources:</u></div>
+        <hr>
+            <div>sand: <u id="sand" class="h3"></u></div>
+            <div>wick: <u id="wick" class="h3"></u></div>
+            <div>powred: <u id="powred" class="h3"></u></div>
+        <hr>
+        <div class="menu text-light h3"><u>lobbie users:</u></div>
+        <hr>
+        <div id="profile-container">
+            {% for i in UL.query.filter_by(lobbie_id=L.query.filter_by(keycode=session['key']).first().id).all() %}
+            <div><span id="{{U.query.get(i.user_id).name + '-profile-color'}}" class="h3" style="color:{{i.color}};">&nbsp;{{U.query.get(i.user_id).name}}&nbsp;</span></div>
+            {% endfor %}
+        </div>
+        <hr>
+        <button class="xfone menu btn" onclick="socket.emit('end', {'key': key}); window.location.href='/leavelobbie'"><snan class="h3">leave lobbie</snan></button>
+        <button class="xfone menu btn bottom" onclick="window.location.href='/logout'"><snan class="h3">logout</snan></button>
+    {% else %}
+        <div class="menu text-light h3"><u>your profile:</u></div>
+        <hr>
+        <div class="menu text-light h5">name: <font class="h2">{{ session['name'] }}</font></div>
+        <div class="menu text-light h5">role: <font class="h2">{{ session['role'] }}</font></div>
+        <hr>
+        <button class="xfone menu btn" onclick="window.location.href='/lobbies'"><span class="h3">all lobbies</span></button>
+        {% if session['role'] == 'teacher' %}
+            <hr>
+            <button class="xfone menu btn" onclick="window.location.href='/mylobbies'"><span class="h3">my lobbies</span></button>
+        {% endif %}
+        <hr>
+        <button class="xfone menu btn" onclick="window.location.href='/logout'"><snan class="h3">logout</snan></button>
+    {% endif %}
+    <hr>
+</div>
+{% endmacro %}
+
+
+{% macro lobbiebutton() %}
+<div class="contain">
+    <hr>
+    <button class="contain flex-row border-g text-light h2 btn-success " onclick="window.location.href='/createlobby'">
+        <div class="border-g">&nbsp;+&nbsp;</div>
+        <div>&nbsp;create new lobbie&nbsp;</div>
+        <div class="border-g">&nbsp;+&nbsp;</div>
+    </button>
+    <hr>
+</div>
+{% endmacro %}
+
+{% macro newlobbie(form, tasks, str, max_cnt) %}
+<div class="contain">
+    <script>
+        var max_cnt = {{ max_cnt }};
+        var index = 0;
+    </script>
+    <form action="" method="post" class="form borderx fit-content">
+    {{ form.hidden_tag() }}
+    <h3>{{ form.owmer.label(class="text-light") }}</h3>
+    <p>{{ form.owmer(class="form-control") }}</p>
+      {% if form.owmer.errors %}
+      <p class="text-warning">
+        {{ form.owmer.errors[0] }}
+      </p>
+    {% endif %}
+
+    <h4>{{ form.type.label(class="text-light") }}</h4>
+    <p>{{ form.type(class="form-control") }}</p>
+      {% if form.type.errors %}
+      <p class="text-warning">
+        {{ form.type.errors[0] }}
+      </p>
+    {% endif %}
+
+    <h4 class="text-light" id="tasks-counter">tasks (select {{max_cnt[0]}}): </h4>
+    <p><input class="" id="tasks" name="tasks" required="" type="hidden" value=""></p>
+    <div class="task-container fill" id="task-container">
+        {% for i in tasks %}
+            <div id="task{{ i }}" class="task fill" style="background-image: url('{{ url_for('static', filename='source/tasks/task' + str(i) + '.jpg') }}')"></div>
+            <hr>
+        {% endfor %}
+    </div>
+
+    <p>{{ form.submit(class="btn btn-success fill disabled") }}</p>
+
+    {% for msg in get_flashed_messages() %}
+      <div class="text-warning">{{msg}}</div>
+    {% endfor %}
+  </form>
+    <script>
+        $('#submit').prop('disabled', true);
+    </script>
+</div>
+{% endmacro %}
+
+{% macro lobbie(color, owner, keycode, type, users, U, L, me) %}
+<div class="contain">
+    <div class="contain border-radius text-light h3 form {% if type == 1 %} {{ 'easy btn-outline-success' }} {% elif type == 2 %} {{ 'normal btn-outline-warning' }} {% else %} {{ 'hard btn-outline-danger' }} {% endif %}"
+    onclick="if(event.srcElement.id == 'goout') return; window.location.href='{% if session['role'] == 'student' %} {{ '/lobbie/' + keycode }} {% else %} {% if U.query.get(owner).name == me %} {{ '/lobbieinfo/' + keycode }} {% endif %} {% endif %}'">
+        <div class="contain flex-row" >
+            <div class="icon-min" style="background: {{ color }}"></div>
+            <div>&nbsp;owner: [ <u>{{ U.query.get(owner).name }}</u> ]</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            {% if U.query.get(owner).name == me %}
+                <div id="goout" class="h6 btn btn-outline-warning" onclick="window.location.href='/deletelobbie/{{keycode}}'">delete</div>
+            {% endif %}
+        </div>
+        {% if users %}
+            <div class="contain h6 flex-row-min">
+                users:&nbsp;<font class="text-light">
+                {% for i in users %}
+                    {{U.query.get(i.user_id).name + ' '}}
+                {% endfor %}</font>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+

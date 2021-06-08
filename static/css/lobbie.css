@@ -1,0 +1,324 @@
+body {
+    width: fit-content;
+    height: fit-content;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    top: 0;
+    left: 0;
+    margin: 0;
+    position: absolute;
+    font-family: 'Courier New', Courier, monospace !important;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.map {
+    width: 350px;
+    height: 350px;
+    position: fixed;
+    border-radius: 100%;
+}
+
+.torch {
+    width: 350px;
+    height: 350px;
+    position: fixed;
+    border-radius: 100%;
+}
+
+.torch:after {
+    width: 350px;
+    height: 350px;
+    position: fixed;
+    border-radius: 100%;
+    content: "";
+}
+
+
+.fone {
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-position: center center;
+    touch-action: none; 
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.left {}
+.left:after {
+    width: 26px;
+    height: 72px;
+    position: fixed;    
+    background-size: cover !important;
+    transform: translate(165px, 105px);
+    content: "";
+    z-index: 100;
+    background: url("../images/left.png");
+}
+
+.right {}
+.right:after {
+    width: 26px;
+    height: 72px;
+    position: fixed;    
+    background-size: cover !important;
+    transform: translate(165px, 105px);
+    content: "";
+    z-index: 100;
+    background: url("../images/right.png");
+}
+
+.up {}
+.up:after {
+    width: 26px;
+    height: 72px;
+    position: fixed;    
+    background-size: cover !important;
+    transform: translate(165px, 105px);
+    content: "";
+    z-index: 100;
+    background: url("../images/back.png");
+}
+
+.down {}
+.down:after {
+    width: 26px;
+    height: 72px;
+    position: fixed;    
+    background-size: cover !important;
+    transform: translate(165px, 105px);
+    content: "";
+    z-index: 100;
+    background: url("../images/front.png");
+}
+
+.text {
+    transform: translate(0, 50px);
+    text-align: center;
+}
+
+.text span {
+    width: fit-content;
+    border-radius: 10px;
+
+}
+
+.xicon {
+    transform: translate(30%, 4px);
+
+    width: fit-content !important;
+    /* height: 100%; */
+    border-radius: 10px;
+    transition: all 0.7s ease;
+    background: linear-gradient(270deg, #18f0b8, #18a2f0, #db5640);
+    background-size: 600% 600%;
+	animation: Gradient 60s ease infinite;
+    opacity: 0;
+    padding-bottom: 6px;
+    line-height: 1.55 !important;
+}
+
+.xicon:hover { 
+    opacity: 1;
+}
+
+.xfone {
+    background: linear-gradient(270deg, #18f0b8, #18a2f0, #db5640);
+    background-size: 600% 600%;
+	animation: Gradient 60s ease infinite;
+}
+
+@-webkit-keyframes Gradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes Gradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes Gradient { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+
+.profile {
+    width: 22%;
+    height: 100%;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: all 1s ease;
+    opacity: 0;
+    z-index: -1;
+}
+
+.profile-open {
+    opacity: 1;
+    z-index: 10;
+}
+
+.menu {
+    width: 100%;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    opacity: 1 !important;   
+}
+
+.fit-content {
+    width: fit-content !important;
+}
+
+.bottom {
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    width: calc(100% - 30px);
+    margin-left: 15px;
+    margin-bottom: 30px;
+}
+
+.x {
+    background: url("../images/fone.jpg");
+}
+
+.text-x {      
+    text-align: center;
+    z-index: 3;
+}
+
+.text-x span{
+    border-radius: 15px;
+    position: fixed;
+    transform: translate(-50%, 50px);
+}
+
+.loading-before {
+    top:0;
+    left: 0;
+    z-index: 100;
+    height: fit-content !important;
+    min-height: 100% !important;
+    width: 100% !important;
+    position: absolute;
+    font-family: 'Courier New', Courier, monospace !important;
+    /* background: url(../images/fone.jpg); */
+    /* background: rgba(0, 0, 0, 0); */
+    transition: all 1s ease;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    backdrop-filter: blur(40px);
+}
+
+.loading-end{
+    z-index: -100;
+}
+
+.loading-end-end{
+    opacity: 0;
+}
+/* 
+.loading-before::before{
+   content: "";
+   background: inherit; 
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   bottom: 0;
+   filter: blur(10px);
+} */
+
+.P {
+    /* font-weight: 700; */
+    text-align: center;
+    /* font-size: 50px; */
+ 
+    position: relative;
+    background: 50% 100% / 50% 50% no-repeat
+                radial-gradient(ellipse at bottom, #fff, transparent, transparent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size: 5vw;
+    color: transparent;
+    /* font-family: "Source Sans Pro", sans-serif; */
+    animation: reveal 1500ms forwards 200ms,
+               glow 1500ms linear infinite 2000ms;
+}
+@keyframes reveal {
+    80%{
+    letter-spacing: 8px;
+    }
+    100% {
+    background-size: 300% 300%;
+    }
+}
+@keyframes glow {
+    40% {
+    text-shadow: 0 0 8px #fff;
+    }
+}
+
+.z-100 {
+    z-index: -100 !important;
+}
+
+#hero {
+    box-shadow: 0 0 25px rgba(255, 208, 0, 0.3); 
+}
+
+.task {
+    width: fit-content;
+    min-width: 60%;
+    height: 80%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    align-items: center;
+    border-radius: 15px;
+    z-index: -100;
+    overflow-y: scroll;
+    opacity: 0;
+}
+
+.task-open {
+    opacity: 1 !important;
+}
+
+.task-t-open{
+    transition: all 1s ease;
+}
+
+.task-z-open {
+    z-index: 11 !important;
+}
+
+.h {
+    font-size: 1.7rem !important;
+    font-weight: 300;
+}
+
+
+.correct {
+    box-shadow: 0 0 50px rgb(0, 255, 0) !important; 
+    border: 3px solid rgb(0, 255, 0);
+}
+
+.incorrect {
+    box-shadow: 0 0 50px rgb(255, 0, 0) !important; 
+    border: 3px solid rgb(255, 0, 0);
+}

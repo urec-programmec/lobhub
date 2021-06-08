@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import lobbiebutton, profile, footer, lobbie %}
+
+{% block title %}
+#lobbie info {{key}}
+{% endblock %}
+
+
+{% block body %}
+    {{ profile(session, lobbies, users, ul) }}
+
+    {{ footer(session, '#lobbie [' + key + ']', type) }}
+
+<div class="contain">
+    <div class="task-container fill form borderx fit-content" id="task-container">
+        {% for i in tasks %}
+            <div id="task{{ i[0] }}" class="task fill {% if i[1] == 'OK' %} {{'selected-easy'}} {% endif %}" style="background-image: url('{{ url_for('static', filename='source/tasks/task' + i[0] + '.jpg') }}')"></div>
+            <div class="contain h6 flex-row-min" style="margin-top:10px;">
+                <div><font class="text-light" >status:&nbsp;<u>{{ i[1] }}</u></font></div>
+                <div><font class="text-light">resolver:&nbsp;<u>{{ '' if i[2] == None else users.query.get(i[2]).name }}</u></font></div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

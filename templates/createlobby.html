@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import lobbie, profile, footer, newlobbie %}
+
+{% block title %}
+#creating
+{% endblock %}
+
+{% block body %}
+    {{ footer(session, '#creating lobby', False) }}
+
+    {{ newlobbie(form, tasks, str, max_cnt) }}
+
+    {{ profile(session) }}
+{% endblock %}

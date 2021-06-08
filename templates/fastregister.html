@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+#fastregister
+{% endblock %}
+
+{% block body %}
+<div class="center contain blurred-box fit-content">
+  <h2 class="text-light">#fastregister</h2>
+  <hr>
+  <form action="" method="post" class="borderx p-20">
+    {{ form.hidden_tag() }}
+    <h3>{{ form.login.label(class="text-light") }}</h3>
+    <p>{{ form.login(class="form-control") }}</p>
+      {% if form.login.errors %}
+      <p class="text-warning">
+        {{ form.login.errors[0] }}
+      </p>
+    {% endif %}
+
+    <h4>{{ form.role.label(class="text-light") }}</h4>
+    <p>{{ form.role(class="form-control") }}</p>
+      {% if form.role.errors %}
+      <p class="text-warning">
+        {{ form.role.errors[0] }}
+      </p>
+    {% endif %}
+    <p>{{ form.submit(class="btn btn-secondary fill") }}</p>
+
+    {% for msg in get_flashed_messages() %}
+      <div class="text-warning">{{msg}}</div>
+    {% endfor %}
+  </form>
+  <a href="/" class="text-secondary h4">#comein</a>
+</div>
+{% endblock %}
+

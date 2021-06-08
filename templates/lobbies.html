@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import lobbiebutton, profile, footer, lobbie %}
+
+{% block title %}
+#lobbies
+{% endblock %}
+
+{% block body %}
+    {{ profile(session, lobbies, users, ul) }}
+
+    {% if user %}
+        {{ footer(session, '#your lobbies', False) }}
+    {% else %}
+        {{ footer(session, '#all lobbies', False) }}
+    {% endif %}
+
+
+    {% if user %}
+        {% for i in lobbies.query.filter_by(owner=user).all() %}
+            {{ lobbie(i.color, i.owner, i.keycode, i.type, ul.query.filter_by(lobbie_id=i.id).all(), users, lobbies, me) }}
+        {% endfor %}
+    {% else %}
+        {% for i in lobbies.query.all() %}
+            {{ lobbie(i.color, i.owner, i.keycode, i.type, ul.query.filter_by(lobbie_id=i.id).all(), users, lobbies, me) }}
+        {% endfor %}
+    {% endif %}
+    {% if session['role'] == 'teacher' %}
+        {{ lobbiebutton() }}
+    {% endif %}
+
+{% endblock %}

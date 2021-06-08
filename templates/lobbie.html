@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% from 'macros.html' import profile %}
+  <meta charset="UTF-8">
+  <title>lobby {{key}}</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/lobbie.css')}}">
+  <link rel="shortcut icon" href="{{url_for('static', filename='images/icon.png')}}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<!--  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>-->
+  <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+
+  <script>
+    var users = {};
+    {% for i in  UL.query.filter_by(lobbie_id=L.query.filter_by(keycode=key).first().id).all() %}
+      users['{{U.query.get(i.user_id).name}}'] = {
+        'name':  '{{U.query.get(i.user_id).name}}',
+        'X': {{i.X}},
+        'Y': {{i.Y}},
+        'color': '{{i.color}}'
+      }
+    {% endfor %}
+    var key = '{{key}}';
+    var me = {
+        'name': '{{session['name']}}',
+        'X': users['{{session['name']}}'].X,
+        'Y': users['{{session['name']}}'].Y,
+        'color': users['{{session['name']}}'].color
+    }
+   var tasks = []
+   let tasks1 = []
+   let tasks2 = []
+
+   {% for i in tasks %}
+      tasks1.push('{{i[3]}}');
+      tasks2.push('{{i[4]}}');
+      tasks.push({{[i[0], i[1], i[2]]}});
+   {% endfor %}
+
+  for (let i in tasks){
+    tasks[i].push(tasks1[i]);
+    tasks[i].push(tasks2[i]);
+  }
+  
+  console.log(tasks)
+
+   var socket = io.connect('http://127.0.0.1:8090');
+   var map = {{ map }};
+
+  </script>
+</head>
+<body>
+  <div id="fone" class="fone" style="background-image: url('{{ url_for('static', filename='source/fones/fone' + key + '.jpg') }}')"></div>
+  <div class="loading-before" id="loading">
+      <p class="P" id="loading-text">loading lobbie</p>
+  </div>
+  <div class="hero-container">
+    <div id="heros"></div>
+    <div id="hero" class="map text-light" style="background-image: url('{{ url_for('static', filename='source/maps/map' + key + '.jpg') }}')"></div>
+    <div id="hero-t1" class="map text-x h2" style="color: {{color}};"><span style="background: {{text_color}};">&nbsp;{{user}}&nbsp;</span></div>
+    <div id="hero-t2" class="map text-x h4">
+      <span id="profile-open" class="xicon xfone" style="padding-left: 17px; padding-right: 17px; padding-bottom: 0px;">
+        {% for i in range(ceil((len(user) - 4) / 2))  %}
+          &nbsp;
+        {% endfor %}
+        lobbie
+        {% for i in range(ceil((len(user) - 4) / 2))  %}
+          &nbsp;
+        {% endfor %}
+      </span>
+    </div>
+    <div id="hero-x" class="map text-light left" style="z-index: 2"></div>
+
+
+    <div id="hero2" class="z-100 map text-light" style="background-image: url('{{ url_for('static', filename='source/maps/map' + key + '.jpg') }}')"></div>
+    <div id="hero2-t1" class="z-100 map text-x h2" style="color: {{color}};"><span style="background: {{text_color}};">&nbsp;{{user}}&nbsp;</span></div>
+    <div id="hero2-t2" class="z-100 map text-x h4"></div>
+    <div id="hero2-x" class="z-100 map text-light left" style="z-index: 2"></div>
+
+  </div>
+
+  {{ profile(session, L, U, UL) }}
+
+  <script src="{{url_for('static', filename='js/lobbie.js')}}"></script>
+</body>
+</html>

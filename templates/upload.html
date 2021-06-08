@@ -1,0 +1,11 @@
+<title>upload</title>
+
+<div style="background-image: url('{{ url_for('static', filename='source/bg.jpg') }}'); width:100%; height:100%;">
+    <form action="/upload" method="post" class="form borderx fit-content" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+         {{ form.type.label() }}
+         {{ form.type() }}
+         <input type="file" name="input">
+        <button type="submit">upload</button>
+    </form>
+</div>
