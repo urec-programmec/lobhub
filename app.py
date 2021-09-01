@@ -266,7 +266,7 @@ def createlobby():
             ts = [i[4:] for i in form.tasks.data.split(',')]
             color = Factory.create().hex_color()
             lobbie = Lobbies(owner=form.owmer.data, type=form.type.data, color=color,
-                            keycode=hashlib.md5((color + str(form.owmer.data)).encode()).hexdigest())
+                            keycode=hashlib.md5((color + str(form.owmer.data)).encode('cp1252')).hexdigest())
             db.session.add(lobbie)
             rt = r_in_t.query.filter_by(type_id=form.type.data).all()
             choosen = []
