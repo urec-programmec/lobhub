@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ADD ACHIVE
+{% endblock %}
+
+{% block body %}
+<div class="contain blurred-box">
+    <form action="" method="post" class="form borderx fit-content">
+    {{ form.hidden_tag() }}
+    <h3>{{ form.user.label(class="text-light") }}</h3>
+    <p>{{ form.user(class="form-control") }}</p>
+      {% if form.user.errors %}
+      <p class="text-warning">
+        {{ form.user.errors[0] }}
+      </p>
+    {% endif %}
+
+    <h4>{{ form.achive.label(class="text-light") }}</h4>
+    <p>{{ form.achive(class="form-control") }}</p>
+      {% if form.achive.errors %}
+      <p class="text-warning">
+        {{ form.achive.errors[0] }}
+      </p>
+    {% endif %}
+
+    <p>{{ form.submit(class="btn btn-success fill") }}</p>
+
+    {% for msg in get_flashed_messages() %}
+      <div class="text-warning">{{msg}}</div>
+    {% endfor %}
+  </form>
+</div>
+
+{% endblock %}

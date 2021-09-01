@@ -1,6 +1,26 @@
 var selected_class = 'selected-easy';
 var tasks = [];
 
+//if (localStorage['location1'] === '1'){
+    $('#i1-52').css('background', 'green');
+    $('#i2-52').css('background', 'green');
+    $('#t52').text('пройдена');
+//}
+
+//if (localStorage['location2'] === '1'){
+    $('#i1-53').css('background', 'green');
+    $('#i2-53').css('background', 'green');
+    $('#t53').text('пройдена');
+//}
+
+
+//if (localStorage['location3'] === '1'){
+    $('#i1-54').css('background', 'green');
+    $('#i2-54').css('background', 'green');
+    $('#t54').text('пройдена');
+//}
+
+
 
 setTimeout(() => $('body').addClass('blur'), 200);
 

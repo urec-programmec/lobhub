@@ -280,7 +280,7 @@ body {
 .task {
     width: fit-content;
     min-width: 60%;
-    height: 80%;
+    height: 100%;
     position: absolute;
     left: 50%;
     top: 50%;

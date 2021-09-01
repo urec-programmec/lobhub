@@ -3,6 +3,7 @@ from assets.Comein import Comein
 from assets.Register import Register
 from assets.Createlobby import Createlobby
 from assets.Uppload import Upload
+from assets.AddAchive import AddAchive
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send, join_room, leave_room
 import hashlib
@@ -14,16 +15,25 @@ from faker import Factory
 app = Flask(__name__)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://j7jr2qorxul8chhw:hkwhs8yrwnwleb53@qao3ibsa7hhgecbv.cbetxkdyhwsb.us-east-1.rds.amazonaws.com/ky6zchcnuadiu2hk'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:pass@192.168.64.2/lobhub'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
 
 
+class Achive(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+    data = db.Column(db.LargeBinary(length=(2 ** 24) - 1), primary_key=False)
+
+    def __repr__(self):
+        return '<Achive %r>' % self.id
+
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     type = db.Column(db.String(10), unique=False, nullable=False)
+    photo = db.Column(db.LargeBinary(length=(2 ** 24) - 1), primary_key=False)
     lobbies = db.relationship('Lobbies', backref='member', lazy='dynamic')
 
     def __repr__(self):
@@ -80,8 +90,13 @@ class u_in_l(db.Model):
     Y = db.Column(db.Integer, primary_key=False)
     color = db.Column(db.String(10), primary_key=False)
 
+class a_for_h(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    achive_id = db.Column(db.Integer, primary_key=False)
+    hero_id = db.Column(db.Integer, primary_key=False)
+
     def __repr__(self):
-        return '<UL %r>' % str(self.user_id) + " " + str(self.lobbie_id)
+        return '<AH %r>' % str(self.hero_id) + " " + str(self.achive_id)
 
 
 class r_in_t(db.Model):
@@ -188,7 +203,7 @@ def comein():
                 session['textColor'] = text_color
                 return redirect('/lobbies')
             else:
-                flash('nickname does not exist')
+                flash('Игрок не обнаружен')
 
     return render_template("comein.html", form=form)
 
@@ -203,7 +218,7 @@ def fastregister():
             name = form.login.data
             type = form.role.data
             if not Users.query.filter_by(name=name).first() and name != 'hero' and name != 'hero2':
-                user = Users(name=name, type=type)
+                user = Users(name=name, type=type, photo=Users.query.filter_by(name='KibiX').first().photo)
                 db.session.add(user)
                 db.session.commit()
                 return redirect('/')
@@ -220,8 +235,9 @@ def lobbies():
 
     if session.get('key'):
         return redirect('lobbie/' + session['key'])
+    keys = [i for i in range(0, len(Lobbies.query.all()))]
 
-    return render_template("lobbies.html", lobbies=Lobbies, ul=u_in_l, users=Users, user=None, me=session['name'])
+    return render_template("lobbies.html", lobbies=Lobbies, ul=u_in_l, users=Users, user=None, me=session['name'], keys=keys)
 
 
 
@@ -426,18 +442,25 @@ def refresh(key):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+
     form = Upload()
 
     if request.method == "POST":
         # print('ok')
         file = request.files['input']
-        t = Type.query.get(form.type.data)
+        # t = Type.query.get(form.type.data)
         # print(file.read())
-        t.map = file.read()
-        # task = Task(data=file.read())
+        # achive = Task(data=file.read(), answer='РУСЬ')
+        # db.session.add(achive)
 
-        # db.session.add(task)
+        user = Users.query.filter_by(type='student', name='Афинка').first()
+        user.photo = file.read()
+        # for i in users:
+        #     if i.name != 'JETT' and i.name != 'Mr. JAVA':
+        #         i.photo = content
+
         db.session.commit()
+
         # print(Type.query.get(form.type.data).map)
     # ts = Task.query.get(19)
 
@@ -447,5 +470,70 @@ def upload():
     return render_template("upload.html", form=form, )
 
 
+@app.route('/start', methods=['GET', 'POST'])
+def start():
+    return render_template("start.html", password='ЕЖИКБЕЖИТПОКРУГУ', len=len, str=str)
+
+@app.route('/endgame', methods=['GET', 'POST'])
+def endgame():
+    return render_template("endgame.html", len=len, str=str)
+
+@app.route('/startgame', methods=['GET', 'POST'])
+def startgame():
+    users = Users.query.filter_by(type='student').all()
+    JAVA = 0
+    JETT = 0
+    for i in users:
+        with open(os.path.join(app.root_path, 'static/source/icons/icon_' + str(i.name) + '.jpeg'), 'wb') as file:
+            file.write(i.photo)
+        if i.name == 'Mr. JAVA':
+            JAVA = i
+        if i.name == 'JETT':
+            JETT = i
+
+    users.remove(JAVA)
+    users.remove(JETT)
+    print(users)
+
+    users.sort(key=lambda user: len(a_for_h.query.filter_by(hero_id=user.id).all()), reverse=True)
+
+    users.append(JAVA)
+    users.append(JETT)
+    print(users)
+
+    achives = Achive.query.all()
+    for i in achives:
+        with open(os.path.join(app.root_path, 'static/source/achive/achive_' + str(i.id) + '.png'), 'wb') as file:
+            file.write(i.data)
+
+    A = Achive.query.all()
+
+    return render_template("startgame.html", U=Users, users=users, a_for_h=a_for_h, A=A, bool=bool, str=str, len=len)
+
+@app.route('/addachive', methods=['GET', 'POST'])
+def addachive():
+    form = AddAchive()
+    owners = [(i.id, i.name) for i in Users.query.filter_by(type='student').all()]
+    form.user.choices = owners
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            for i in range(1):
+                achive = a_for_h(hero_id=form.user.data, achive_id=form.achive.data)
+                db.session.add(achive)
+            db.session.commit()
+
+    return render_template("addachive.html", form=form, str=str)
+
+@app.route('/locationok', methods=['GET', 'POST'])
+def locationok():
+    leavelobbie()
+    return render_template("locationok.html")
+
+@app.route('/prestart', methods=['GET', 'POST'])
+def prestart():
+    return render_template("prestart.html")
+
+
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0', port=80)

@@ -4,7 +4,7 @@
             <div class="i">{{session['name']}}</div>
         </div>
         <div class="xicon contain xfone" id="profile-open">
-            <div class="h4">profile</div>
+            <div class="h4">профиль</div>
         </div>
         {% if color %}
             <h1 class="text-light contain {% if type == 1 %} {{ 'btn btn-success' }} {% elif type == 2 %} {{ 'btn btn-warning' }} {% else %} {{ 'btn btn-danger' }} {% endif %}">{{title}}</h1>
@@ -20,14 +20,9 @@
 <div class="profile" style="background: rgba({{session['r']}}, {{session['g']}}, {{session['b']}}, 0.5); color: {{ session['textColor'] }} !important;" id="profile">
 
     {% if session.get('key') %}
-        <div class="menu text-light h6 {% if L.query.filter_by(keycode=session['key']).first().type == 1 %} {{ 'btn btn-success' }} {% elif L.query.filter_by(keycode=session['key']).first().type == 2 %} {{ 'btn btn-warning' }} {% else %} {{ 'btn btn-danger' }} {% endif %}">[ {{session['key']}} ]</div>
-        <div class="menu text-light h3"><u>resources:</u></div>
+        <div class="menu text-light h6 {% if L.query.filter_by(keycode=session['key']).first().type == 1 %} {{ 'btn btn-success' }} {% elif L.query.filter_by(keycode=session['key']).first().type == 2 %} {{ 'btn btn-warning' }} {% else %} {{ 'btn btn-danger' }} {% endif %}">[{{session['key'][:21]}}]</div>
         <hr>
-            <div>sand: <u id="sand" class="h3"></u></div>
-            <div>wick: <u id="wick" class="h3"></u></div>
-            <div>powred: <u id="powred" class="h3"></u></div>
-        <hr>
-        <div class="menu text-light h3"><u>lobbie users:</u></div>
+        <div class="menu text-light h3"><u>сейчас на площадке:</u></div>
         <hr>
         <div id="profile-container">
             {% for i in UL.query.filter_by(lobbie_id=L.query.filter_by(keycode=session['key']).first().id).all() %}
@@ -35,21 +30,19 @@
             {% endfor %}
         </div>
         <hr>
-        <button class="xfone menu btn" onclick="socket.emit('end', {'key': key}); window.location.href='/leavelobbie'"><snan class="h3">leave lobbie</snan></button>
-        <button class="xfone menu btn bottom" onclick="window.location.href='/logout'"><snan class="h3">logout</snan></button>
+        <button class="xfone menu btn" onclick="socket.emit('end', {'key': key}); window.location.href='/leavelobbie'"><snan class="h3">покинуть площадку</snan></button>
+        <button class="xfone menu btn bottom" onclick="window.location.href='/logout'"><snan class="h3">выйти</snan></button>
     {% else %}
-        <div class="menu text-light h3"><u>your profile:</u></div>
+        <div class="menu text-light h3"><u>Игровой профиль</u></div>
         <hr>
-        <div class="menu text-light h5">name: <font class="h2">{{ session['name'] }}</font></div>
-        <div class="menu text-light h5">role: <font class="h2">{{ session['role'] }}</font></div>
-        <hr>
-        <button class="xfone menu btn" onclick="window.location.href='/lobbies'"><span class="h3">all lobbies</span></button>
+        <div class="menu text-light h5">Игровое имя: <font class="h2">{{ session['name'] }}</font></div>
+        <div class="menu text-light h5">Роль: <font class="h2">герой</font></div>
         {% if session['role'] == 'teacher' %}
             <hr>
             <button class="xfone menu btn" onclick="window.location.href='/mylobbies'"><span class="h3">my lobbies</span></button>
         {% endif %}
         <hr>
-        <button class="xfone menu btn" onclick="window.location.href='/logout'"><snan class="h3">logout</snan></button>
+        <button class="xfone menu btn" onclick="window.location.href='/logout'"><snan class="h3">выйти</snan></button>
     {% endif %}
     <hr>
 </div>
@@ -113,21 +106,24 @@
 </div>
 {% endmacro %}
 
-{% macro lobbie(color, owner, keycode, type, users, U, L, me) %}
+{% macro lobbie(color, owner, keycode, type, users, U, L, me, key) %}
 <div class="contain">
     <div class="contain border-radius text-light h3 form {% if type == 1 %} {{ 'easy btn-outline-success' }} {% elif type == 2 %} {{ 'normal btn-outline-warning' }} {% else %} {{ 'hard btn-outline-danger' }} {% endif %}"
-    onclick="if(event.srcElement.id == 'goout') return; window.location.href='{% if session['role'] == 'student' %} {{ '/lobbie/' + keycode }} {% else %} {% if U.query.get(owner).name == me %} {{ '/lobbieinfo/' + keycode }} {% endif %} {% endif %}'">
-        <div class="contain flex-row" >
-            <div class="icon-min" style="background: {{ color }}"></div>
-            <div>&nbsp;owner: [ <u>{{ U.query.get(owner).name }}</u> ]</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    onclick="if(event.srcElement.id == 'goout') return; window.location.href='{% if session['role'] == 'student' %} {{ '/lobbie/' + keycode }} {% else %} {% if U.query.get(owner).name == me %} {{ '/lobbieinfo/' + keycode }} {% endif %} {% endif %}'" style="width:70%">
+        <div class="contain flex-row" style="padding-bottom:0">
+            <h2><u class="xxx-text" style="font-size:1.6em !important" id="l{{key}}">Локация 1 "Волшебный лес"</u></h2>
+        </div>
+        <div class="contain flex-row">
+            <div class="icon-min" style="background: red" id="i1-{{key}}"></div>
+            <div>&nbsp;Статус: <u id="t{{key}}">не пройдена</u>&nbsp;&nbsp;</div>
+            <div class="icon-min" style="background: red" id="i2-{{key}}"></div>
             {% if U.query.get(owner).name == me %}
                 <div id="goout" class="h6 btn btn-outline-warning" onclick="window.location.href='/deletelobbie/{{keycode}}'">delete</div>
             {% endif %}
         </div>
         {% if users %}
             <div class="contain h6 flex-row-min">
-                users:&nbsp;<font class="text-light">
+                сейчас на площадке:&nbsp;<font class="text-light">
                 {% for i in users %}
                     {{U.query.get(i.user_id).name + ' '}}
                 {% endfor %}</font>
@@ -137,3 +133,44 @@
 </div>
 {% endmacro %}
 
+{% macro heroes(users, U, A, a_for_h, bool, str, len) %}
+<div class="contain" style="width:100%">
+    {% for i in users %}
+    <div class="contain-row ">
+        <div class="contain" style="align-items: start !important;">
+            <h4 class="text-light" style="width:max-content">{{i.name + ' [' + str(len(a_for_h.query.filter_by(hero_id=i.id).all())) + ']'}}</h4>
+            <div class="contain-row" style="background: none !important">
+                <div id="icon_{{i.name}}" class="hero-icon" style="background-image: url('{{ url_for('static', filename='source/icons/icon_' + i.name + '.jpeg') }}')" onclick="window.location='/'"></div>
+<!--                <h3 class="text-light" style="width: 100px;"> ———></h3>-->
+            </div>
+        </div>
+        <div style="flex-direction: row; justify-content:space-around; display: flex; width:100%">
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[0].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[0].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[0].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[0].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[0].id).all())) + ']'}}</h6>
+            </div>
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[1].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[1].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[1].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[1].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[1].id).all())) + ']'}}</h6>
+            </div>
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[2].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[2].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[2].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[2].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[2].id).all())) + ']'}}</h6>
+            </div>
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[3].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[3].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[3].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[3].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[3].id).all())) + ']'}}</h6>
+            </div>
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[4].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[4].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[4].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[4].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[4].id).all())) + ']'}}</h6>
+            </div>
+            <div class="contain">
+                <div class="hero-icon" style="background-image: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[5].id).first()) %} url('{{ url_for('static', filename='source/achive/achive_' + str(A[5].id) + '.png') }}') {% else %} {{''}} {% endif %}; background: {% if bool(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[5].id).first()) %} {{''}} {% else %} rgba(255, 255, 255, 0.1) {% endif %};"></div>
+                <h6 class="text-light">{{A[5].name + '[' + str(len(a_for_h.query.filter_by(hero_id=i.id).filter_by(achive_id=A[5].id).all())) + ']'}}</h6>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}

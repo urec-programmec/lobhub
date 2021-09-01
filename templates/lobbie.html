@@ -45,7 +45,7 @@
   
   console.log(tasks)
 
-   var socket = io.connect('http://127.0.0.1:8090');
+   var socket = io.connect('http://0.0.0.0:80');
    var map = {{ map }};
 
   </script>
@@ -53,7 +53,7 @@
 <body>
   <div id="fone" class="fone" style="background-image: url('{{ url_for('static', filename='source/fones/fone' + key + '.jpg') }}')"></div>
   <div class="loading-before" id="loading">
-      <p class="P" id="loading-text">loading lobbie</p>
+      <p class="P" id="loading-text">переход в игровую площадку</p>
   </div>
   <div class="hero-container">
     <div id="heros"></div>
@@ -64,7 +64,7 @@
         {% for i in range(ceil((len(user) - 4) / 2))  %}
           &nbsp;
         {% endfor %}
-        lobbie
+        профиль
         {% for i in range(ceil((len(user) - 4) / 2))  %}
           &nbsp;
         {% endfor %}

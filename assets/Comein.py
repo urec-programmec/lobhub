@@ -4,5 +4,5 @@ from wtforms.validators import DataRequired, Length
 
 
 class Comein(FlaskForm):
-    login = StringField("nickname: ", validators=[DataRequired(), Length(min=3, max=10)])
-    submit = SubmitField("come in")
+    login = StringField("Игровое имя: ", validators=[DataRequired(), Length(min=1, max=20)])
+    submit = SubmitField("Войти на тренировочную площадку")

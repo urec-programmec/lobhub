@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import heroes %}
+
+{% block title %}
+STARTGAME
+{% endblock %}
+
+
+{% block body %}
+<div class="contain blurred-box">
+    <h2 class="text-light start-text"><span style="font-size: 0.6em !important">ДОБРО ПОЖАЛОВАТЬ В</span> <span>ЛУКОМОРЬЕ 2077</span></h2>
+    <hr>
+    <h2 class="text-light">Зал достижений героев Лукоморья 2077:</h2>
+
+     {{ heroes(users, U, A, a_for_h, bool, str, len) }}
+</div>
+
+{% endblock %}

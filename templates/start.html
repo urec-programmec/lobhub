@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+START
+{% endblock %}
+
+{% block init %}
+<script>
+    var count_letters = {{len(password)}};
+    var password = '{{password}}';
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="center contain blurred-box fit-content">
+    <h2 class="text-light start-text">⚠ ДОСТУП ЗАБЛОКИРОВАН ⚠</h2>
+    <hr>
+    <div class="text-light" style="font-size:3em;">[введите пароль]</div>
+    <h1 class="text-light xxx" style="font-size:4.5em;">T;BR,T;BNGJRHEUE</h1>
+    <div class="start-container">
+        {% for i in range(len(password)):  %}
+          <input class="start-block" maxlength="1" id="{{str(i) + '_letter'}}"></input>
+        {% endfor %}
+    </div>
+
+    <div class="center btn-danger start-correctly contain" id="start-incorrect">
+        ⚠ НЕВЕРНЫЙ ПАРОЛЬ ⚠
+    </div>
+    <div class="center btn-success start-correctly contain" id="start-correct">
+        ⚠ ДОСТУП РАЗРЕШЕН ⚠
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='js/start.js')}}"></script>
+{% endblock %}

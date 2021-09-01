@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    
+
     document.onkeydown = check;
 
     // console.log(tasks);
@@ -517,13 +517,13 @@ $( document ).ready(function() {
         return `
         <div id="task` + task[0] + `" class="task" style="background: rgba(` + hex_rgb(me.color).r + `, ` + hex_rgb(me.color).g + `, ` + hex_rgb(me.color).b + `, 0.5) !important;">
             <hr>
-            <h2 style="color: ` + text_color + `">#get ` + task[4] + `</h2>
+            <h2 style="color: ` + text_color + `">Испытание локации</h2>
             <img style="width:fit-content; height:fit-content; border-radius: 15px;" src="/static/source/lobbie-tasks/task` + task[0] + `.jpg"></img>
             <hr>
-            <h2 style="color: ` + text_color + `">#answer</h2>
+            <h2 style="color: ` + text_color + `">ключевое слово</h2>
             <input type="text" id="task-i-` + task[0] + `" class="text-send form-control" style="width: 50% !important; padding-left:20px; padding-right:20px; margin-left:20px; margin-right:20px;">
             <hr>
-            <button id="task-b-` + task[0] + `" class="h send xfone menu btn" style="width: 50% !important; padding-left:20px; padding-right:20px; margin-left:20px; margin-right:20px;">get ` + task[4] + `</button>
+            <button id="task-b-` + task[0] + `" class="h send xfone menu btn" style="width: 50% !important; padding-left:20px; padding-right:20px; margin-left:20px; margin-right:20px;">пройти локацию</button>
             <hr>
         </div>
         `
@@ -618,7 +618,10 @@ $( document ).ready(function() {
             // console.log(tasks.find(t => t[0] == id));
             tasks.find(t => t[0] == id)[3] = 'OK';
             init_resources();           
-            socket.emit('task', {'key': key, 'task': id, 'resolver': me.name, 'status': 'OK'});        
+            socket.emit('task', {'key': key, 'task': id, 'resolver': me.name, 'status': 'OK'});
+            localStorage['location4'] = '1';
+
+            window.location.href='/endgame';
         }
         else {
             $('#task-i-' + id).addClass('incorrect');
