@@ -20,7 +20,9 @@ var tasks = [];
     $('#t54').text('пройдена');
 //}
 
-
+    $('#i1-55').css('background', 'green');
+    $('#i2-55').css('background', 'green');
+    $('#t55').text('пройдена');
 
 setTimeout(() => $('body').addClass('blur'), 200);
 
